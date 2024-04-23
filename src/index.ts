@@ -1,16 +1,16 @@
 import ErrorResponse from "./interfaces/ErrorResponse";
 
-const express = require('express');
-const cookieParser = require('cookie-parser');
-const morgan = require('morgan');
-const dotenv = require('dotenv');
-const cors = require('cors');
-const mongoose = require('mongoose');
+import express from "express";
+import cookieParser from "cookie-parser";
+import morgan from "morgan";
+import dotenv from "dotenv";
+import cors from "cors";
+import mongoose from "mongoose";
 
 import errorHandler from './middlewares/errorHandler';
 
-const indexRouter = require('./routes');
-const usersRouter = require('./routes/users');
+import indexRouter from './routes';
+import usersRouter from './routes/users';
 
 const app = express();
 
@@ -26,7 +26,7 @@ app.use(cookieParser());
 
 // database connections
 mongoose.Promise = Promise
-mongoose.connect(process.env.MONGO_DB)
+mongoose.connect(process.env.MONGO_DB!)
 mongoose.connection.on('error', (error: Error) => console.log(error))
 
 // routes
