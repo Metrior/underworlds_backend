@@ -1,9 +1,24 @@
-import mongoose from 'mongoose';
+import mongoose, { Document, Schema } from 'mongoose';
 
-// User Config
-const UserSchema = new mongoose.Schema({
-    email: { type: String, required: true },
-    username: { type: String, required: true },
+type Auth = {
+    password: { type: String, required: true, select: false },
+    salt: { type: String, select: false },
+    sessionToken: { type: String, select: false },
+}
+
+export interface IUser extends Document {
+    userName: string;
+    email: string;
+    password: string;
+    role: 'regular' | 'admin' | 'superAdmin';
+    authentication: Auth
+}
+
+const userSchema = new Schema<IUser>({
+    userName: { type: String, required: true },
+    email: { type: String, required: true, unique: true },
+    password: { type: String, required: true },
+    role: { type: String, enum: ['regular', 'admin', 'superAdmin'], default: 'regular' },
     authentication: {
         password: { type: String, required: true, select: false },
         salt: { type: String, select: false },
@@ -11,7 +26,7 @@ const UserSchema = new mongoose.Schema({
     },
 });
 
-export const UserModel = mongoose.model('User', UserSchema);
+export const UserModel = mongoose.model<IUser>('User', userSchema);
 
 // User Actions
 export const getUserBySessionToken = (sessionToken: string) => UserModel.findOne({ 'authentication.sessionToken': sessionToken });

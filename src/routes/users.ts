@@ -1,9 +1,9 @@
 import express from 'express';
+import { getUsers, createAdmin } from '../controllers/userController';
+import { protect, adminOnly } from '../middlewares/authMiddleware';
 const router = express.Router();
 
-/* GET users listing. */
-router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
-});
+router.get('/', protect, getUsers);
+router.post('/create-admin', protect, adminOnly, createAdmin);
 
 export default router;
